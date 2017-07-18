@@ -1,0 +1,17 @@
+<launch>
+  <!-- Load Bagfiles -->
+  <arg name="path" default="/home/eric-uib/bagfiles/170717_2130/" />
+  <arg name="file_1" default="170717_2130_0000.bag" />
+  <arg name="file_2" default="gs/gs170717_2130_2017-07-17-21-30-57_0.bag" />
+  <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg path)$(arg file_1) $(arg path)$(arg file_2)"/>
+
+  <!-- Load Params -->
+  <rosparam command="load" file="$(arg path)/gs/170717_2130_params.yaml"/>
+
+  <!-- Load Params -->
+  <include file="$(find ros_plot_tools)/launch/plot_rviz.launch" >
+    <arg name="odom"    default="/ekf_odom/odometry"/>
+    <arg name="map"     default="/ekf_map/odometry"/>
+  </include>
+
+</launch>
