@@ -35,6 +35,7 @@ find_package(catkin REQUIRED
 	utils
 	cmake_modules
 	message_filters
+  octomap
 	)
 
 # Dependencies - Eigen:
@@ -48,7 +49,8 @@ catkin_package(
   safety
   evologics_ros_sync
   auv_msgs
-  control)
+  control
+  octomap)
 
 ## Build node
 include_directories(include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})

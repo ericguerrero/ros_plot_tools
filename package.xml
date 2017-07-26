@@ -55,7 +55,9 @@
   <build_depend>safety</build_depend>
   <build_depend>auv_msgs</build_depend>
   <build_depend>control</build_depend>
-
+  <build_depend>octomap</build_depend>
+  
+  <run_depend>octomap</run_depend>
   <run_depend>safety</run_depend>
   <run_depend>cmake_modules</run_depend>
   <run_depend>utils</run_depend>
