@@ -1,0 +1,62 @@
+<launch>
+  <!-- Sensors -->
+  <arg name="enableImu" default="true"/>
+  <arg name="enableDepth" default="true"/>
+  <arg name="enableDvl" default="true"/>
+  <arg name="enableGps" default="true"/>
+  <arg name="enableModem" default="false"/>
+  <arg name="enableVO" default="false"/>
+
+
+  <arg name="enableSafety" default="false"/>
+
+  <!-- VEHICLE FRAMES -->
+  <rosparam command="load" file="$(find turbot)/config/frames.yaml"/>
+
+  <!-- VEHICLE STATIC TFs -->
+  <include file="$(find turbot)/launch/modules/transforms.launch">
+    <arg name="suffix" value="_robot"/>
+  </include>
+
+  <!-- Pose Tf broadcaster -->
+  <node  name="pose_tf_broadcaster" pkg="sensors" type="pose_tf_broadcaster" respawn="true" output="screen" >
+    <remap from="/imu" to="/sensors/imu"/>
+  </node>
+
+  <!-- Altitude estimator -->
+  <node  name="altitude_estimator" pkg="sensors" type="altitude_estimator" respawn="true" output="screen" >
+    <remap from="/vo_altitude"  to="/sensors/vo_altitude_raw"/>
+    <remap from="/dvl_altitude" to="/sensors/dvl_altitude_raw"/>
+    <remap from="/altitude_estimator/altitude" to="/sensors/altitude_raw"/>
+
+    <remap from="/imu" to="/sensors/imu"/>
+    <param name="enable_dvl_range" value="$(arg enableDvl)" />
+    <param name="enable_vo_range" value="$(arg enableVO)" />
+  </node> 
+
+  <!-- Sensor aggregator -->
+  <rosparam command="load" file="$(find turbot)/config/sensor_aggregator.yaml"/>
+  <node  name="sensors" pkg="sensors" type="sensor_aggregator" output="screen" respawn="true">
+    <param name="enable_safety" value="$(arg enableSafety)" />
+    <param name="depth/enable"  value="$(arg enableDepth)" />
+    <param name="imu/enable"    value="$(arg enableImu)" />
+    <param name="dvl/enable"    value="$(arg enableDvl)" />
+    <param name="gps/enable"    value="$(arg enableGps)" />
+    <param name="modem/enable"  value="$(arg enableModem)" />
+    <param name="vo/enable"     value="$(arg enableVO)" />
+    <param name="alt/enable"    value="true" />
+  </node>
+
+  <!-- Robot localization -->
+  <rosparam command="load" file="$(find turbot)/config/robot_localization.yaml"/>
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_odom" respawn="true" output="screen" clear_params="true">
+    <remap from="odometry/filtered" to="/ekf_odom/new_odometry"/>
+    <remap from="/set_pose" to="/ekf_odom/set_pose"/>
+  </node>
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_map" respawn="true" output="screen" clear_params="true">
+    <remap from="odometry/filtered" to="/ekf_map/new_odometry"/>
+    <remap from="/set_pose" to="/ekf_map/set_pose"/>
+  </node> 
+
+
+</launch>

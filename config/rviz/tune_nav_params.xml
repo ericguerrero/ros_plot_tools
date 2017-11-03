@@ -2,10 +2,11 @@
   <!-- TOPICS -->
   <arg name="odom"    default="/ekf_odom/odometry"/>
   <arg name="map"     default="/ekf_map/odometry"/>
-  
+  <arg name="new_odom"    default="/ekf_odom/new_odometry"/>
+  <arg name="new_map"     default="/ekf_map/new_odometry"/>
 
-  <!-- RVIZ -->
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ros_tools)/config/usbl_setup.rviz"/> 
+  <!-- NODE -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ros_tools)/config/rviz/tune_nav_params.rviz"/> 
 
   <!-- PLOT TRAJECTORIES -->
   <node pkg="ros_tools" name="plot_path_gps_odom" type="plot_path" output="screen">
@@ -16,6 +17,16 @@
    <node pkg="ros_tools" name="plot_path_gps_map" type="plot_path" output="screen">
   	<remap from="topic_in" to="$(arg map)"/>
   	<remap from="topic_out" to="/plot/map"/>
+  </node>
+
+  <node pkg="ros_tools" name="plot_path_gps_new_odom" type="plot_path" output="screen">
+    <remap from="topic_in" to="$(arg new_odom)"/>
+    <remap from="topic_out" to="/plot/new_odom"/>
+  </node>
+
+  <node pkg="ros_tools" name="plot_path_gps_new_map" type="plot_path" output="screen">
+    <remap from="topic_in" to="$(arg new_map)"/>
+    <remap from="topic_out" to="/plot/new_map"/>
   </node>
 
   <node pkg="ros_tools" name="plot_path_gt" type="plot_path" output="screen">

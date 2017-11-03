@@ -1,0 +1,26 @@
+<launch>
+
+  <!-- Load mission -->
+  <include file="$(find ros_tools)/config/missions/valldemossa_night.xml"/>
+
+
+  <!-- State estimation -->
+  <include file="$(find ros_tools)/launch/state_estimation.launch">
+    <arg name="enableImu"     value="true"/>
+    <arg name="enableDepth"   value="true"/>
+    <arg name="enableDvl"     value="true"/>
+    <arg name="enableGps"     value="true"/>
+    <arg name="enableModem"   value="true"/>
+    <arg name="enableVO"      value="false"/>
+  </include>
+
+  <!-- Load navigation params -->
+  <rosparam command="load" file="$(find ros_tools)/config/params/tune_nav_params.yaml"/>
+
+  <!-- Visualization -->
+  <include file="$(find ros_tools)/config/rviz/tune_nav_params.xml"/>
+
+</launch>
+
+
+
