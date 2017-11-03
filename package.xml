@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>ros_plot_tools</name>
+  <name>ros_tools</name>
   <version>0.0.0</version>
-  <description>The ros_plot_tools package</description>
+  <description>The ros_tools package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -55,9 +55,7 @@
   <build_depend>safety</build_depend>
   <build_depend>auv_msgs</build_depend>
   <build_depend>control</build_depend>
-  <build_depend>octomap</build_depend>
   
-  <run_depend>octomap</run_depend>
   <run_depend>safety</run_depend>
   <run_depend>cmake_modules</run_depend>
   <run_depend>utils</run_depend>

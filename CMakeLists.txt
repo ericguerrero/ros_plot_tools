@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ros_plot_tools)
+project(ros_tools)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native ")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O3 -march=native")
@@ -35,7 +35,6 @@ find_package(catkin REQUIRED
 	utils
 	cmake_modules
 	message_filters
-  octomap
 	)
 
 # Dependencies - Eigen:
@@ -49,8 +48,7 @@ catkin_package(
   safety
   evologics_ros_sync
   auv_msgs
-  control
-  octomap)
+  control)
 
 ## Build node
 include_directories(include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
