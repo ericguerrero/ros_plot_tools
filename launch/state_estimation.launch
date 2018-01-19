@@ -50,13 +50,11 @@
   <!-- Robot localization -->
   <rosparam command="load" file="$(find turbot)/config/robot_localization.yaml"/>
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_odom" respawn="true" output="screen" clear_params="true">
-    <remap from="odometry/filtered" to="/ekf_odom/new_odometry"/>
+    <remap from="odometry/filtered" to="/ekf_odom/odometry"/>
     <remap from="/set_pose" to="/ekf_odom/set_pose"/>
   </node>
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_map" respawn="true" output="screen" clear_params="true">
-    <remap from="odometry/filtered" to="/ekf_map/new_odometry"/>
+    <remap from="odometry/filtered" to="/ekf_map/odometry"/>
     <remap from="/set_pose" to="/ekf_map/set_pose"/>
   </node> 
-
-
 </launch>

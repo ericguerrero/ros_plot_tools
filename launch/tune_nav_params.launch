@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Load mission -->
-  <include file="$(find ros_tools)/config/missions/valldemossa_night.xml"/>
+  <include file="$(find ros_tools)/config/missions/vall_kine.xml"/>
 
 
   <!-- State estimation -->
