@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find ros_tools)/config/rviz/visualize.xml"/>
+</launch>
+
+
+

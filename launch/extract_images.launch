@@ -1,0 +1,42 @@
+<!-- launch file for image extraction from a bagfile
+     this launch does a playback of a bagfile,
+     runs image processing to get coloured rectified images
+     from raw images, and saves the images to harddrive.
+     The resulting images will typically be saved to ~/.ros
+     To run the launch, type
+       roslaunch extract_images.launch bagfile:=/your/absolute/path/to/bagfile.bag
+     Note that the path has to be absolute!
+     To extract the camera calibration file, run the following command while the playback
+     is running:
+      rostopic echo -n 1 /camera_flex_wide/left/camera_info
+-->
+
+<launch>
+  <param name="/use_sim_time" value="true"/>
+  <arg name="camera" default="/stereo_down/right" />
+  <arg name="image" default="image_rect_color" />
+  <arg name="format" default="%06i.png" />
+  <arg name="rate" default="15.0" />
+
+  <arg name="path"    default= "/media/eric-uib/HardDisk/bagfiles" />
+  <arg name="mission" default= "/2016_09_13_valldemossa_kinetic" />
+  <arg name="file1"     default= "/20160913_125249_1.bag" />
+  <arg name="file2"     default= "/20160913_125249_2.bag" />
+  <arg name="file3"     default= "/20160913_125249_3.bag" />
+  <arg name="bagfile"    default= "$(arg path)$(arg mission)$(arg file1) $(arg path)$(arg mission)$(arg file2)  $(arg path)$(arg mission)$(arg file3) " />
+
+  <!-- playback the data -->
+  <node pkg="rosbag" type="play" name="player" args="-d 1 -r $(arg rate) $(arg bagfile)" required="true" />
+
+  <!-- run the image processing (de-bayering, undistortion, rectification) -->
+  <node pkg="image_proc" type="image_proc" name="image_proc" ns="$(arg camera)" />
+
+  <!-- grab images to disk -->
+  <node pkg="image_view" type="extract_images" name="extractor" output="screen" >
+    <remap from="image" to="$(arg camera)/$(arg image)" />
+    <param name="filename_format" value="$(arg format)" />
+
+    <!-- only grab image if sec_per_frame passed between two images -->
+    <param name="sec_per_frame" value="0" />
+  </node>
+</launch>

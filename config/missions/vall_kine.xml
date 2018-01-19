@@ -1,0 +1,24 @@
+<launch>
+	<!-- Params -->
+	<arg name="rate"   	default= "1" />
+
+	<!-- Mission -->
+	<arg name="path"   	default= "/media/eric-uib/HardDisk/bagfiles" />
+	<arg name="mission" default= "/2016_09_13_valldemossa_kinetic" />
+	<arg name="file1"   	default= "/20160913_125249_1.bag" />
+	<arg name="file2"   	default= "/20160913_125249_2.bag" />
+	<arg name="file3"   	default= "/20160913_125249_3.bag" />
+	<arg name="bags"   	default= "$(arg path)$(arg mission)$(arg file1) $(arg path)$(arg mission)$(arg file2)  $(arg path)$(arg mission)$(arg file3) " />
+	<arg name="paramfile"  default= "/20160913_125249_params.yaml" />
+
+	<!-- Topics -->
+	<arg name="topics"   default="/ekf_map/odometry /ekf_odom/odometry /sensors/altitude_raw /sensors/depth_raw /sensors/dvl_raw /sensors/gps_raw /sensors/imu_raw /sensors/modem_raw" />
+
+	<!-- Bagfile play -->
+	<param name="use_sim_time" value="true"/>
+	<node name="rosbag" pkg="rosbag" type="play" args="--clock $(arg bags) -r $(arg rate) --topics $(arg topics)"/>
+
+	<!-- Load params -->
+	<rosparam command="load" file="$(arg path)$(arg mission)$(arg paramfile)"/>
+
+</launch>
