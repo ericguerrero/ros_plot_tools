@@ -64,3 +64,6 @@ add_dependencies(plot_marker ${catkin_EXPORTED_TARGETS})
 
 add_executable(geo2ned src/geo2ned.cpp)
 target_link_libraries(geo2ned ${catkin_LIBRARIES})
+
+add_executable(img_sub src/img_sub.cpp)
+target_link_libraries(img_sub ${catkin_LIBRARIES})
