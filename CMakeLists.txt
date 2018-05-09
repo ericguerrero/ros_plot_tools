@@ -67,3 +67,6 @@ target_link_libraries(geo2ned ${catkin_LIBRARIES})
 
 add_executable(img_sub src/img_sub.cpp)
 target_link_libraries(img_sub ${catkin_LIBRARIES})
+
+add_executable(img_format src/img_format.cpp)
+target_link_libraries(img_format ${catkin_LIBRARIES})

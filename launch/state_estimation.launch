@@ -9,6 +9,8 @@
 
 
   <arg name="enableSafety" default="false"/>
+  <arg name="enableEKS" default="false"/>
+  <arg name="output" default="screen"/>
 
   <!-- VEHICLE FRAMES -->
   <rosparam command="load" file="$(find turbot)/config/frames.yaml"/>
@@ -19,12 +21,28 @@
   </include>
 
   <!-- Pose Tf broadcaster -->
-  <node  name="pose_tf_broadcaster" pkg="sensors" type="pose_tf_broadcaster" respawn="true" output="screen" >
+  <node  name="pose_tf_broadcaster" pkg="sensors" type="pose_tf_broadcaster" respawn="true" output="$(arg output)" >
     <remap from="/imu" to="/sensors/imu"/>
   </node>
 
+  <!-- USBL Projection -->
+  <rosparam command="load" file="$(find turbot)/config/usbl.yaml"/>
+  <node if="$(arg enableModem)" pkg="usbl_position" name="usbl_projection" type="usbl_projection" output="$(arg output)">
+    <remap from="/sensors/modem_delayed_acoustic" to="/sensors/modem_delayed" />
+  </node>
+
+  <!-- IMU Madgwick filter -->
+  <rosparam command="load" file="$(find turbot)/config/imu_filter_madgwick.yaml"/>
+  <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter_madgwick" output="$(arg output)">
+    <!-- Input -->
+    <remap from="imu/mag" to="/sensors/imu_madgwick_mag"/>
+    <remap from="imu/data_raw" to="sensors/imu_madgwick_data"/>
+    <!-- Output -->
+    <remap from="imu/data" to="/sensors/imu_raw"/>
+  </node>
+
   <!-- Altitude estimator -->
-  <node  name="altitude_estimator" pkg="sensors" type="altitude_estimator" respawn="true" output="screen" >
+  <node  name="altitude_estimator" pkg="sensors" type="altitude_estimator" respawn="true" output="$(arg output)" >
     <remap from="/vo_altitude"  to="/sensors/vo_altitude_raw"/>
     <remap from="/dvl_altitude" to="/sensors/dvl_altitude_raw"/>
     <remap from="/altitude_estimator/altitude" to="/sensors/altitude_raw"/>
@@ -36,7 +54,7 @@
 
   <!-- Sensor aggregator -->
   <rosparam command="load" file="$(find turbot)/config/sensor_aggregator.yaml"/>
-  <node  name="sensors" pkg="sensors" type="sensor_aggregator" output="screen" respawn="true">
+  <node  name="sensors" pkg="sensors" type="sensor_aggregator" output="$(arg output)" respawn="true">
     <param name="enable_safety" value="$(arg enableSafety)" />
     <param name="depth/enable"  value="$(arg enableDepth)" />
     <param name="imu/enable"    value="$(arg enableImu)" />
@@ -49,12 +67,17 @@
 
   <!-- Robot localization -->
   <rosparam command="load" file="$(find turbot)/config/robot_localization.yaml"/>
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_odom" respawn="true" output="screen" clear_params="true">
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_odom" respawn="true" output="$(arg output)" clear_params="true">
     <remap from="odometry/filtered" to="/ekf_odom/odometry"/>
+    <remap from="/odometry/path" to="/ekf_odom/path"/>
+    <remap from="/odometry/path_smoothed" to="/ekf_odom/path_smoothed"/>
     <remap from="/set_pose" to="/ekf_odom/set_pose"/>
   </node>
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_map" respawn="true" output="screen" clear_params="true">
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_map" respawn="true" output="$(arg output)" clear_params="true">
+    <param name="enable_eks" value="$(arg enableEKS)" />
     <remap from="odometry/filtered" to="/ekf_map/odometry"/>
+    <remap from="/odometry/path" to="/ekf_map/path"/>
+    <remap from="/odometry/path_smoothed" to="/ekf_map/path_smoothed"/>
     <remap from="/set_pose" to="/ekf_map/set_pose"/>
   </node> 
 </launch>

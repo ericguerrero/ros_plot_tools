@@ -17,54 +17,16 @@
   	<remap from="topic_out" to="/plot/map"/>
   </node>
 
-
-  <!-- PLOT MARKERS -->
-  <!-- gps auv -->
-  <node pkg="ros_tools" name="plot_gps" type="plot_marker" output="screen">
-    <remap from="topic_in" to="/sensors/gps"/>
-    <remap from="topic_out" to="/plot/gps"/>
-    <param name="b" value="1.0"/>
-    <param name="size" value="0.1"/>
-    <param name="duration" value="10"/>
-    <param name="frame_id" value="/gps_origin"/>
-  </node>
-
-  <!-- modem raw -->
+ <!-- modem raw -->
   <node pkg="ros_tools" name="plot_raw" type="plot_marker" output="screen">
   	<remap from="topic_in" to="/sensors/modem_raw"/>
   	<remap from="topic_out" to="/plot/modem_raw"/>
-  	<param name="g" value="1.0"/>
+  	<param name="g" value="0.4"/>
     <param name="size" value="0.1"/>
     <param name="duration" value="10"/>
   	<param name="frame_id" value="/modem_origin"/>
   </node>
 
-  <!-- modem delayed -->
-  <node pkg="ros_tools" name="plot_delayed" type="plot_marker" output="screen">
-  	<remap from="topic_in" to="/sensors/modem_delayed_acoustic"/>
-  	<remap from="topic_out" to="/plot/modem_delayed_acoustic"/>
-    <param name="g" value="1.0"/>
-  	<param name="b" value="1.0"/>
-  	<param name="a" value="1.0"/>
-  	<param name="size" value="0.1"/>
-    <param name="duration" value="10"/>
-    <param name="frame_id" value="/modem_origin"/>
-  </node>
-
-  <!-- buoy -->
-  <node pkg="ros_tools" name="geo2ned_buoy_raw" type="geo2ned" output="screen">
-    <remap from="/geo" to="/sensors/gps_buoy_emlid_raw"/>
-    <remap from="/geo2ned_buoy_raw/ned" to="/sensors/gps_buoy_emlid_raw_ned"/>
-  </node>
-
-  <node pkg="ros_tools" name="plot_buoy_raw" type="plot_marker" output="screen">
-    <remap from="topic_in" to="/sensors/gps_buoy_emlid_raw_ned"/>
-    <remap from="topic_out" to="/plot/buoy_raw_ned"/>
-    <param name="r" value="1.0"/>
-    <param name="size" value="0.1"/>
-    <param name="duration" value="10"/>
-    <param name="frame_id" value="/map"/>
-  </node>
 
   <!-- MODEL -->
   <param name="robot_description" textfile="$(find turbot)/models/sparus.urdf" />
