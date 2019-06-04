@@ -1,0 +1,26 @@
+<launch>
+  <!-- Params -->
+  <arg name="camera" default="/stereo_down/left" />
+  <arg name="dataset"    	default= "vall_ss" /> 
+
+  <!-- Load data -->
+	<include file="$(find ros_tools)/config/missions/$(arg dataset).xml"/>
+
+  <!-- Plot trajectory -->
+  <node pkg="ros_tools" name="plot_path_gps_map" type="plot_path" output="screen">
+  	<remap from="topic_in" to="/ekf_map/odometry"/>
+  	<remap from="topic_out" to="/plot/map"/>
+  </node>
+
+  <!-- MODEL -->
+  <param name="robot_description" textfile="$(find turbot)/models/sparus.urdf" />
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+  <!-- Image Processing -->
+  <node pkg="image_proc" type="image_proc" name="image_proc" ns="$(arg camera)" />
+
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ros_tools)/config/rviz/visualize.rviz"/> 
+
+</launch>

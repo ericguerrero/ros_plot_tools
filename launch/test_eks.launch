@@ -1,0 +1,24 @@
+<launch>
+	<!-- Settings -->
+	<arg name="enableNavigation"  		default="true" /> 
+	<arg name="dataset"    				default="punta_negra_dense_1"/>
+	<arg name="stereo"    				default="stereo_down"/>
+	<arg name="decimation"    			default="2"/>
+	<arg name="image"    				default="$(arg stereo)/scaled_x$(arg decimation)"/>
+	<arg name="gp_type"  				default="SGPR" /> <!-- SGPR, SVGP, SGPMC, DGPnL -->
+
+	<!-- Raw data -->
+	<include file="$(find map_estimation)/config/data_loader/$(arg dataset).xml">
+		<arg name="enableNavigation" default="$(arg enableNavigation)"/>
+	</include>
+
+	<!-- Navigation -->
+	<include if='$(arg enableNavigation)' file="$(find ros_tools)/launch/state_estimation.launch">
+		<arg name="enableModem"   value="true"/>
+		<arg name="enableVO"      value="false"/>
+		<arg name="enableEKS"      value="true"/>
+	</include>
+
+	<!-- RVIZ -->
+	<include file="$(find ros_tools)/config/rviz/visualize.xml"/>
+</launch>

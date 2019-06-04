@@ -1,0 +1,45 @@
+<launch>
+  <arg name="camera" default="/stereo_down/" />
+  <arg name="path" default="/media/eric-uib/HardDisk/bagfiles/2018_04_24_vall_cnn_laser/180424_1846/video/" />
+  <arg name="format" default=".avi" />
+
+  <arg name="decimation" default="2" />
+
+
+  	<!-- Image Processing 
+    <arg name="nodelet_args" value="standalone image_proc_custom/crop_decimate" />
+    <node ns="$(arg camera)" pkg="nodelet" type="nodelet" name="image_proc_decimate_left_x$(arg decimation)" output="screen" respawn="true" args="$(arg nodelet_args)" >
+        <param name="decimation_x" value="$(arg decimation)" />
+        <param name="decimation_y" value="$(arg decimation)" />
+        <remap from="camera" to="left" />
+        <remap from="camera_out" to="scaled_x$(arg decimation)/left"/>
+    </node>-->
+
+
+  <!-- grab class 2 
+  <node pkg="image_view" type="video_recorder" name="extractor_c2" output="screen" >
+    <remap from="image" to="$(arg camera)/scaled_x2/left/class_2" />
+    <param name="filename" value="$(arg path)c2_$(arg format)" />
+  </node>-->
+
+
+    <!-- grab class 2 overlayed
+  <node pkg="image_view" type="video_recorder" name="extractor_c2_ov" output="screen" >
+    <remap from="image" to="$(arg camera)/scaled_x2/left/class_2_overlayed" />
+    <param name="filename" value="$(arg path)c2_$(arg format)" />
+  </node>-->
+
+ <!-- grab images to segment -->
+  <node pkg="image_view" type="video_recorder" name="extractor_img" output="screen" >
+    <remap from="image" to="$(arg camera)/scaled_x2/left/segmented" />
+    <param name="filename" value="$(arg path)img_$(arg format)" />
+  </node>
+
+ <!-- grab images raw 
+  <node pkg="image_proc" type="image_proc" name="image_proc" ns="$(arg camera)/left" />
+  <node pkg="image_view" type="video_recorder" name="extractor_raw" output="screen" >
+    <remap from="image" to="$(arg camera)/left/image_rect_color" />
+    <param name="filename" value="$(arg path)raw_$(arg format)" />
+  </node>-->
+
+</launch>
